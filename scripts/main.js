@@ -91,6 +91,10 @@ function draw() {
   ctx.fillStyle = 'red';
   ctx.fillRect(player.x, player.y, player.width, player.height);
 
+  ctx.fillStyle = "blue";
+  ctx.font = "bold 16px Arial";
+  ctx.fillText(fps + ' fps', 20, 20);
+
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(0, height);

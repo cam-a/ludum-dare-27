@@ -6,7 +6,7 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, wallJumpPower:1000, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
+var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, wallJumpPower:500, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
 var level = [
   {x:300, y:300, width:50, height:100},
   {x:500, y:400, width:100, height:100},
@@ -52,7 +52,7 @@ function update(dt) {
   fps = ~~(1000/dt);
   var elapsedSeconds = dt/1000;
 
-  player.vx *= friction;
+  if (!player.airborne) player.vx *= friction;
   player.vy += gravity*elapsedSeconds;
 
   var oldX = player.x;
@@ -77,32 +77,21 @@ function update(dt) {
   if(player.y+player.height > height) {
     player.y = height-player.height;
     player.vy = 0;
+    player.collidingOn.bottom = true;
     player.airborne = false;
   }
 
   if (38 in keysDown || 87 in keysDown || 32 in keysDown) { // up
     if (!player.airborne && !player.jumpedOnKeyPress) {
-      // player.vy = -player.jumpPower;
-      // player.airborne = true;
-      // player.jumpedOnKeyPress = true;
+      player.vy = -player.jumpPower;
 
-      // if (player.collidingOn.right) {
-      //   player.vx = -player.jumpPower;
-      // }
-      // else if (player.collidingOn.left) {
-      //   player.vx = player.jumpPower;
-      // }
-
-      if (player.collidingOn.right) {
-        player.vx = -player.wallJumpPower;
-        player.vy = -player.jumpPower;
-      }
-      else if (player.collidingOn.left) {
-        player.vx = player.wallJumpPower;
-        player.vy = -player.jumpPower;
-      }
-      else if (!player.collidingOn.top) {
-        player.vy = -player.jumpPower;
+      if (!player.collidingOn.bottom) {
+        if (player.collidingOn.right) {
+          player.vx = -player.wallJumpPower;
+        }
+        else if (player.collidingOn.left) {
+          player.vx = player.wallJumpPower;
+        }
       }
 
       player.jumpedOnKeyPress = true;
@@ -113,10 +102,20 @@ function update(dt) {
     if (player.vy < 0) player.vy *= player.jumpDecel;
   }
   if (37 in keysDown || 65 in keysDown) { // left
-    player.vx -= player.ax*elapsedSeconds;
+    if (!player.airborne) {
+      player.vx -= player.ax*elapsedSeconds;
+    }
+    else {
+      player.vx -= 0.1*player.ax*elapsedSeconds;
+    }
   }
   if (39 in keysDown || 68 in keysDown) { // right
-    player.vx += player.ax*elapsedSeconds;
+    if (!player.airborne) {
+      player.vx += player.ax*elapsedSeconds;
+    }
+    else {
+      player.vx += 0.1*player.ax*elapsedSeconds;
+    }
   }
 }
 

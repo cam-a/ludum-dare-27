@@ -6,16 +6,18 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:800, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
+var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, wallJumpPower:1000, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
 var level = [
   {x:300, y:300, width:50, height:100},
   {x:500, y:400, width:100, height:100},
-  {x:600, y:550, width:100, height:50}
+  {x:600, y:550, width:100, height:50},
+  {x:0, y:0, width:1, height:600},
+  {x:800, y:0, width:1, height: 600}
 ];
 var TWO_PI = 2*Math.PI;
 var keysDown = {};
 var friction = 0.8;
-var gravity = 2000;
+var gravity = 1000;
 var newX;
 var newY;
 
@@ -64,8 +66,11 @@ function update(dt) {
   for (var i=0; i<level.length; i++) {
     if (handleCollision(level[i], player)) willCollide = true;
   }
-  if (!player.collidingOn.bottom) {
+  if (!willCollide) {
     player.airborne = true;
+  }
+  else {
+    player.airborne = false;
   }
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
@@ -75,10 +80,31 @@ function update(dt) {
     player.airborne = false;
   }
 
-  if (38 in keysDown || 87 in keysDown) { // up
-    if(!player.airborne && !player.jumpedOnKeyPress) {
-      player.vy = -player.jumpPower;
-      player.airborne = true;
+  if (38 in keysDown || 87 in keysDown || 32 in keysDown) { // up
+    if (!player.airborne && !player.jumpedOnKeyPress) {
+      // player.vy = -player.jumpPower;
+      // player.airborne = true;
+      // player.jumpedOnKeyPress = true;
+
+      // if (player.collidingOn.right) {
+      //   player.vx = -player.jumpPower;
+      // }
+      // else if (player.collidingOn.left) {
+      //   player.vx = player.jumpPower;
+      // }
+
+      if (player.collidingOn.right) {
+        player.vx = -player.wallJumpPower;
+        player.vy = -player.jumpPower;
+      }
+      else if (player.collidingOn.left) {
+        player.vx = player.wallJumpPower;
+        player.vy = -player.jumpPower;
+      }
+      else if (!player.collidingOn.top) {
+        player.vy = -player.jumpPower;
+      }
+
       player.jumpedOnKeyPress = true;
     }
   }

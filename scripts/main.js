@@ -6,9 +6,12 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, speed:500};
+var player = {x:0, y:0, width:25, height:50, vx:0, vy:0, ax:10000, jumpPower:800, airborne:false};
+var rectangle = {x:500, y:250, width:100, height:100};
 var TWO_PI = 2*Math.PI;
 var keysDown = {};
+var friction = 0.8;
+var gravity = 2000;
 
 setup();
 start();
@@ -17,10 +20,10 @@ function setup() {
   viewport = document.getElementById('viewport');
   ctx = viewport.getContext('2d');
   win = $(window);
-  width = win.width();
-  height = win.height();
+  width = 800; //win.width();
+  height = 600; //win.height();
   viewport.width = width;
-  viewport.height = win.height();
+  viewport.height = height;
 }
 function start() {
   then = Date.now();
@@ -39,26 +42,56 @@ function frame() {
 
 function update(dt) {
   fps = ~~(1000/dt);
-  console.log(fps);
-  var distance = player.speed * dt/1000;
+  var elapsedSeconds = dt/1000;
   if (38 in keysDown) { // up
-    player.y -= distance;
-  }
-  if (40 in keysDown) { // down
-    player.y += distance;
+    if(!player.airborne) {
+      player.vy = -player.jumpPower;
+      player.airborne = true;
+    }
   }
   if (37 in keysDown) { // left
-    player.x -= distance;
+    player.vx -= player.ax*elapsedSeconds;
   }
   if (39 in keysDown) { // right
-    player.x += distance;
+    player.vx += player.ax*elapsedSeconds;
+  }
+  player.vy += gravity*elapsedSeconds;
+  player.y += player.vy*elapsedSeconds;
+  player.vx *= friction;
+  player.x += player.vx*elapsedSeconds;
+
+  if (player.x < 0) player.x = 0;
+  else if (player.x+player.width > width) player.x = width-player.width;
+  if(player.y+player.height > height) {
+    player.y = height-player.height;
+    player.vy = 0;
+    player.airborne = false;
   }
 }
 
 function draw() {
   ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = 'black';
+  ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+  ctx.fill();
+  ctx.fillStyle = 'red';
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
   ctx.beginPath();
-  ctx.arc(player.x, player.y, 50, 0, TWO_PI);
+  ctx.moveTo(0, 0);
+  ctx.lineTo(0, height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(0, height);
+  ctx.lineTo(width, height);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(width, height);
+  ctx.lineTo(width, 0);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(width, 0);
+  ctx.lineTo(0, 0);
   ctx.stroke();
 }
 

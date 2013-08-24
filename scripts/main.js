@@ -6,7 +6,7 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:100, height:10c0, vx:0, vy:0, ax:10000, jumpPower:1000, airborne:false};
+var player = {x:0, y:0, width:20, height:30, vx:0, vy:0, ax:10000, jumpPower:1000, airborne:false};
 var rectangle = {x:500, y:400, width:100, height:100};
 var TWO_PI = 2*Math.PI;
 var keysDown = {};
@@ -62,8 +62,10 @@ function update(dt) {
   player.vy += gravity*elapsedSeconds;
 
   var willCollide = handleCollision(rectangle, player);
-  player.x += player.vx*elapsedSeconds;
-  player.y += player.vy*elapsedSeconds;
+  if(!(willCollide.t && player.vy>0) || !(willCollide.b && player.vy < 0))
+    player.y += player.vy*elapsedSeconds;
+  if(!(willCollide.l && player.vx>0) || !(willCollide.r && player.vx < 0))
+    player.x += player.vx*elapsedSeconds;
 
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
@@ -109,17 +111,20 @@ function handleCollision(staticObj, dynamicObj) {
   var xOffset = (staticObj.x+staticObj.width/2) - (dynamicObj.x+dynamicObj.width/2);
   var yOffset = (staticObj.y+staticObj.height/2) - (dynamicObj.y+dynamicObj.height/2);
 
-  if (Math.abs(xOffset) <= minXOffset && Math.abs(yOffset) <= minYOffset) { // collision
-    if (Math.abs(xOffset) < Math.abs(yOffset)) { // collision on top or bottom
+  var xDiff = minXOffset-Math.abs(xOffset);
+  var yDiff = minYOffset-Math.abs(yOffset);
+
+  if (xDiff >= 0 && yDiff >=0) { // collision
+    if (yDiff < xDiff) { // collision on top or bottom
       if (yOffset > 0) { // collision on top
         dynamicObj.y = staticObj.y-dynamicObj.height;
-        dynamicObj.vy = 0;
+        if (dynamicObj.vy > 0) dynamicObj.vy = 0;
         player.airborne = false;
         willCollide.t = true;
       }
       else { // collision on bottom
         dynamicObj.y = staticObj.y+staticObj.height;
-        dynamicObj.vy = 0;
+        if(dynamicObj.vy < 0) dynamicObj.vy = 0;
         willCollide.b = true;
       }
     }

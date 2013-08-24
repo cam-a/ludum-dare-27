@@ -49,27 +49,32 @@ function frame() {
 function update(dt) {
   fps = ~~(1000/dt);
   var elapsedSeconds = dt/1000;
-  if (38 in keysDown) { // up
+  if (38 in keysDown || 87 in keysDown) { // up
     if(!player.airborne) {
       player.vy = -player.jumpPower;
       player.airborne = true;
     }
   }
-  if (37 in keysDown) { // left
+  if (37 in keysDown || 65 in keysDown) { // left
     player.vx -= player.ax*elapsedSeconds;
   }
-  if (39 in keysDown) { // right
+  if (39 in keysDown || 68 in keysDown) { // right
     player.vx += player.ax*elapsedSeconds;
   }
 
   player.vx *= friction;
   player.vy += gravity*elapsedSeconds;
 
-  for (var i=0; i<level.length; i++) {
-    handleCollision(level[i], player);
-  }
+  var oldX = player.x;
+  var oldY = player.y;
+  var willCollide = false;
+
   player.y += player.vy*elapsedSeconds;
   player.x += player.vx*elapsedSeconds;
+
+  for (var i=0; i<level.length; i++) {
+    if (handleCollision(level[i], player)) willCollide = true;
+  }
 
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
@@ -151,8 +156,9 @@ function handleCollision(staticObj, dynamicObj) {
         willCollide.r = true;
       }
     }
+    return true;
   }
-  return willCollide;
+  return false;
 }
 
 addEventListener("keydown", function (e) {

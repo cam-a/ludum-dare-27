@@ -6,7 +6,7 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:30, vx:0, vy:0, ax:10000, jumpPower:800, airborne:false};
+var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:800, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
 var level = [
   {x:300, y:300, width:50, height:100},
   {x:500, y:400, width:100, height:100},
@@ -49,18 +49,6 @@ function frame() {
 function update(dt) {
   fps = ~~(1000/dt);
   var elapsedSeconds = dt/1000;
-  if (38 in keysDown || 87 in keysDown) { // up
-    if(!player.airborne) {
-      player.vy = -player.jumpPower;
-      player.airborne = true;
-    }
-  }
-  if (37 in keysDown || 65 in keysDown) { // left
-    player.vx -= player.ax*elapsedSeconds;
-  }
-  if (39 in keysDown || 68 in keysDown) { // right
-    player.vx += player.ax*elapsedSeconds;
-  }
 
   player.vx *= friction;
   player.vy += gravity*elapsedSeconds;
@@ -72,16 +60,37 @@ function update(dt) {
   player.y += player.vy*elapsedSeconds;
   player.x += player.vx*elapsedSeconds;
 
+  player.collidingOn = {top:false, bottom:false, left:false, right:false};
   for (var i=0; i<level.length; i++) {
     if (handleCollision(level[i], player)) willCollide = true;
   }
-
+  if (!player.collidingOn.bottom) {
+    player.airborne = true;
+  }
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
   if(player.y+player.height > height) {
     player.y = height-player.height;
     player.vy = 0;
     player.airborne = false;
+  }
+
+  if (38 in keysDown || 87 in keysDown) { // up
+    if(!player.airborne && !player.jumpedOnKeyPress) {
+      player.vy = -player.jumpPower;
+      player.airborne = true;
+      player.jumpedOnKeyPress = true;
+    }
+  }
+  else {
+    player.jumpedOnKeyPress = false;
+    if (player.vy < 0) player.vy *= player.jumpDecel;
+  }
+  if (37 in keysDown || 65 in keysDown) { // left
+    player.vx -= player.ax*elapsedSeconds;
+  }
+  if (39 in keysDown || 68 in keysDown) { // right
+    player.vx += player.ax*elapsedSeconds;
   }
 }
 
@@ -135,12 +144,14 @@ function handleCollision(staticObj, dynamicObj) {
       if (yOffset > 0) { // collision on top
         dynamicObj.y = staticObj.y-dynamicObj.height;
         if (dynamicObj.vy > 0) dynamicObj.vy = 0;
-        player.airborne = false;
+        dynamicObj.airborne = false;
+        dynamicObj.collidingOn.bottom = true;
         willCollide.t = true;
       }
       else { // collision on bottom
         dynamicObj.y = staticObj.y+staticObj.height;
         if(dynamicObj.vy < 0) dynamicObj.vy = 0;
+        dynamicObj.collidingOn.top = true;
         willCollide.b = true;
       }
     }
@@ -148,11 +159,13 @@ function handleCollision(staticObj, dynamicObj) {
       if (xOffset > 0) { // collision on left
         dynamicObj.x = staticObj.x-dynamicObj.width;
         if (dynamicObj.vx > 0) dynamicObj.vx = 0;
+        dynamicObj.collidingOn.right = true;
         willCollide.l = true;
       }
       else { // collision on right
         dynamicObj.x = staticObj.x+staticObj.width;
         if (dynamicObj.vx < 0) dynamicObj.vx = 0;
+        dynamicObj.collidingOn.left = true;
         willCollide.r = true;
       }
     }

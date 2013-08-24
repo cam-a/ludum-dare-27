@@ -6,7 +6,7 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, wallJumpPower:500, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
+var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, sticking:500, wallJumpPower:1000, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
 var level = [
   {x:300, y:300, width:50, height:100},
   {x:500, y:400, width:100, height:100},
@@ -53,6 +53,7 @@ function update(dt) {
   var elapsedSeconds = dt/1000;
 
   if (!player.airborne) player.vx *= friction;
+  else player.vx *= 0.9;
   player.vy += gravity*elapsedSeconds;
 
   var oldX = player.x;
@@ -102,21 +103,31 @@ function update(dt) {
     if (player.vy < 0) player.vy *= player.jumpDecel;
   }
   if (37 in keysDown || 65 in keysDown) { // left
-    if (!player.airborne) {
-      player.vx -= player.ax*elapsedSeconds;
+    if (player.collidingOn.right) {
+      if (player.sticking <= 0) {
+        player.vx -= player.ax*elapsedSeconds;
+      }
     }
     else {
-      player.vx -= 0.1*player.ax*elapsedSeconds;
+      player.vx -= player.ax*elapsedSeconds;
     }
   }
   if (39 in keysDown || 68 in keysDown) { // right
-    if (!player.airborne) {
-      player.vx += player.ax*elapsedSeconds;
+    if (player.collidingOn.left) {
+      if (player.sticking <= 0) {
+        player.vx += player.ax*elapsedSeconds;
+      }
     }
     else {
-      player.vx += 0.1*player.ax*elapsedSeconds;
+      player.vx += player.ax*elapsedSeconds;
     }
   }
+
+  if (player.collidingOn.left || player.collidingOn.right) {
+    if (player.sticking > 0)
+      player.sticking -= dt;
+  }
+  else player.sticking = 500;
 }
 
 function draw() {
@@ -127,7 +138,10 @@ function draw() {
     ctx.rect(level[i].x, level[i].y, level[i].width, level[i].height);
   }
   ctx.fill();
-  ctx.fillStyle = 'red';
+  if (player.sticking > 0)
+    ctx.fillStyle = 'red';
+  else
+    ctx.fillStyle = 'green';
   ctx.fillRect(player.x, player.y, player.width, player.height);
 
   ctx.fillStyle = "blue";

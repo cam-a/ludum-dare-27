@@ -6,8 +6,12 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:30, vx:0, vy:0, ax:10000, jumpPower:1000, airborne:false};
-var rectangle = {x:500, y:400, width:100, height:100};
+var player = {x:0, y:0, width:20, height:30, vx:0, vy:0, ax:10000, jumpPower:800, airborne:false};
+var level = [
+  {x:300, y:300, width:50, height:100},
+  {x:500, y:400, width:100, height:100},
+  {x:600, y:550, width:100, height:50}
+];
 var TWO_PI = 2*Math.PI;
 var keysDown = {};
 var friction = 0.8;
@@ -61,11 +65,11 @@ function update(dt) {
   player.vx *= friction;
   player.vy += gravity*elapsedSeconds;
 
-  var willCollide = handleCollision(rectangle, player);
-  if(!(willCollide.t && player.vy>0) || !(willCollide.b && player.vy < 0))
-    player.y += player.vy*elapsedSeconds;
-  if(!(willCollide.l && player.vx>0) || !(willCollide.r && player.vx < 0))
-    player.x += player.vx*elapsedSeconds;
+  for (var i=0; i<level.length; i++) {
+    handleCollision(level[i], player);
+  }
+  player.y += player.vy*elapsedSeconds;
+  player.x += player.vx*elapsedSeconds;
 
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
@@ -79,7 +83,10 @@ function update(dt) {
 function draw() {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = 'black';
-  ctx.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+  for(var i=0; i<level.length; i++) {
+    ctx.rect(level[i].x, level[i].y, level[i].width, level[i].height);
+  }
   ctx.fill();
   ctx.fillStyle = 'red';
   ctx.fillRect(player.x, player.y, player.width, player.height);

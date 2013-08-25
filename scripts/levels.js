@@ -19,9 +19,47 @@ var levels = [
       {x:0, y:0, width:1, height:200},
       {x:1000, y:0, width:1, height: 200}
     ],
-    safeZone: {x:960, y:80, width:40, height:40}
+    safeZone: {x:960, y:80, width:40, height:40},
+    loadingBar: {x:0, y:0, width:0, height:200}
   }
 ];
+
+var elapsedSeconds;
+var willCollide;
+function updateLevel(dt, level, player) {
+  level.loadingBar.width += dt/10;
+
+  elapsedSeconds = dt/1000;
+
+  willCollide = false;
+
+  player.y += player.vy*elapsedSeconds;
+  player.x += player.vx*elapsedSeconds;
+
+  player.collidingOn = {top:false, bottom:false, left:false, right:false};
+  for (i=0; i<level.walls.length; i++) {
+    if (handleCollision(level.walls[i], player)) willCollide = true;
+  }
+  if (!willCollide) {
+    player.airborne = true;
+  }
+  else {
+    player.airborne = false;
+  }
+  if (player.x < 0) player.x = 0;
+  else if (player.x+player.width > width) player.x = width-player.width;
+  if (player.y+player.height > height) {
+    player.y = height-player.height;
+    player.vy = 0;
+    player.collidingOn.bottom = true;
+    player.airborne = false;
+  }
+  if (player.y < 0) {
+    player.y = 0;
+    player.vy = 0;
+    player.collidingOn.top = true;
+  }
+}
 
 function renderLevel(ctx, level, player) {
   ctx.clearRect(0, 0, width, height);
@@ -39,7 +77,7 @@ function renderLevel(ctx, level, player) {
   ctx.fillRect(level.safeZone.x, level.safeZone.y, level.safeZone.width, level.safeZone.height);
 
   ctx.fillStyle = 'green';
-  ctx.fillRect(loadingBar.x, loadingBar.y, loadingBar.width, loadingBar.height);
+  ctx.fillRect(level.loadingBar.x, level.loadingBar.y, level.loadingBar.width, level.loadingBar.height);
 
   ctx.beginPath();
   ctx.moveTo(0, 0);
@@ -57,4 +95,58 @@ function renderLevel(ctx, level, player) {
   ctx.moveTo(width, 0);
   ctx.lineTo(0, 0);
   ctx.stroke();
+}
+
+var willCollide;
+var minXOffset;
+var minYOffset;
+var xOffset;
+var yOffset;
+var xDiff;
+var yDiff;
+function handleCollision(staticObj, dynamicObj) {
+  var willCollide = {l:false, r:false, t:false, b:false};
+
+  minXOffset = staticObj.width/2 + dynamicObj.width/2;
+  minYOffset = staticObj.height/2 + dynamicObj.height/2;
+
+  xOffset = (staticObj.x+staticObj.width/2) - (dynamicObj.x+dynamicObj.width/2);
+  yOffset = (staticObj.y+staticObj.height/2) - (dynamicObj.y+dynamicObj.height/2);
+
+  xDiff = minXOffset-Math.abs(xOffset);
+  yDiff = minYOffset-Math.abs(yOffset);
+
+  if (xDiff >= 0 && yDiff >=0) { // collision
+    if (yDiff < xDiff) { // collision on top or bottom
+      if (yOffset > 0) { // collision on top
+        dynamicObj.y = staticObj.y-dynamicObj.height;
+        if (dynamicObj.vy > 0) dynamicObj.vy = 0;
+        dynamicObj.airborne = false;
+        dynamicObj.collidingOn.bottom = true;
+        willCollide.t = true;
+      }
+      else { // collision on bottom
+        dynamicObj.y = staticObj.y+staticObj.height;
+        if(dynamicObj.vy < 0) dynamicObj.vy = 0;
+        dynamicObj.collidingOn.top = true;
+        willCollide.b = true;
+      }
+    }
+    else { // collision on left or right
+      if (xOffset > 0) { // collision on left
+        dynamicObj.x = staticObj.x-dynamicObj.width;
+        if (dynamicObj.vx > 0) dynamicObj.vx = 0;
+        dynamicObj.collidingOn.right = true;
+        willCollide.l = true;
+      }
+      else { // collision on right
+        dynamicObj.x = staticObj.x+staticObj.width;
+        if (dynamicObj.vx < 0) dynamicObj.vx = 0;
+        dynamicObj.collidingOn.left = true;
+        willCollide.r = true;
+      }
+    }
+    return true;
+  }
+  return false;
 }

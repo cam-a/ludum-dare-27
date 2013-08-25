@@ -6,14 +6,24 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:20, height:20, vx:0, vy:0, ax:10000, jumpPower:600, sticking:500, wallJumpPower:1000, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
+var player = {x:0, y:0, width:10, height:10, vx:0, vy:0, ax:5000, jumpPower:300, sticking:500, wallJumpPower:500, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
 var level = [
-  {x:300, y:300, width:50, height:100},
-  {x:500, y:400, width:100, height:100},
-  {x:600, y:550, width:100, height:50},
-  {x:0, y:0, width:1, height:600},
-  {x:800, y:0, width:1, height: 600}
+  {x:150, y:167, width:90, height:33},
+  {x:240, y:133, width:40, height:67},
+  {x:280, y:80, width:40, height:120},
+  {x:280, y:0, width:40, height:65},
+  {x:350, y:0, width:70, height:180},
+  {x:450, y:40, width:200, height:160},
+  {x:690, y:0, width:40, height:155},
+  {x:750, y:140, width:40, height:60},
+  {x:810, y:0, width:80, height:155},
+  {x:960, y:120, width:40, height:20},
+  {x:940, y:80, width:20, height:60},
+  {x:0, y:0, width:1, height:200},
+  {x:1000, y:0, width:1, height: 200}
 ];
+var loadingBar = {x:0, y:0, width:0, height:200};
+var timeLeft = 10000;
 var TWO_PI = 2*Math.PI;
 var keysDown = {};
 var friction = 0.8;
@@ -28,15 +38,15 @@ function setup() {
   viewport = document.getElementById('viewport');
   ctx = viewport.getContext('2d');
   win = $(window);
-  width = 800; //win.width();
-  height = 600; //win.height();
+  width = 1000; //win.width();
+  height = 200; //win.height();
   viewport.width = width;
   viewport.height = height;
 }
 function start() {
   then = Date.now();
-  player.x = width/2;
-  player.y = height/2;
+  player.x = 50;
+  player.y = 190;
   requestAnimationFrame(frame);
 }
 
@@ -48,23 +58,26 @@ function frame() {
   then = now;
 }
 
+var elapsedSeconds;
+var willCollide;
+var i;
 function update(dt) {
+  timeLeft -= dt;
+  loadingBar.width = 1000-timeLeft/10;
   fps = ~~(1000/dt);
-  var elapsedSeconds = dt/1000;
+  elapsedSeconds = dt/1000;
 
   if (!player.airborne) player.vx *= friction;
   else player.vx *= 0.9;
   player.vy += gravity*elapsedSeconds;
 
-  var oldX = player.x;
-  var oldY = player.y;
-  var willCollide = false;
+  willCollide = false;
 
   player.y += player.vy*elapsedSeconds;
   player.x += player.vx*elapsedSeconds;
 
   player.collidingOn = {top:false, bottom:false, left:false, right:false};
-  for (var i=0; i<level.length; i++) {
+  for (i=0; i<level.length; i++) {
     if (handleCollision(level[i], player)) willCollide = true;
   }
   if (!willCollide) {
@@ -75,11 +88,16 @@ function update(dt) {
   }
   if (player.x < 0) player.x = 0;
   else if (player.x+player.width > width) player.x = width-player.width;
-  if(player.y+player.height > height) {
+  if (player.y+player.height > height) {
     player.y = height-player.height;
     player.vy = 0;
     player.collidingOn.bottom = true;
     player.airborne = false;
+  }
+  if (player.y < 0) {
+    player.y = 0;
+    player.vy = 0;
+    player.collidingOn.top = true;
   }
 
   if (38 in keysDown || 87 in keysDown || 32 in keysDown) { // up
@@ -103,7 +121,7 @@ function update(dt) {
     if (player.vy < 0) player.vy *= player.jumpDecel;
   }
   if (37 in keysDown || 65 in keysDown) { // left
-    if (player.collidingOn.right) {
+    if (player.collidingOn.right && !player.collidingOn.bottom) {
       if (player.sticking <= 0) {
         player.vx -= player.ax*elapsedSeconds;
       }
@@ -113,7 +131,7 @@ function update(dt) {
     }
   }
   if (39 in keysDown || 68 in keysDown) { // right
-    if (player.collidingOn.left) {
+    if (player.collidingOn.left && !player.collidingOn.bottom) {
       if (player.sticking <= 0) {
         player.vx += player.ax*elapsedSeconds;
       }
@@ -134,7 +152,7 @@ function draw() {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = 'black';
 
-  for(var i=0; i<level.length; i++) {
+  for(i=0; i<level.length; i++) {
     ctx.rect(level[i].x, level[i].y, level[i].width, level[i].height);
   }
   ctx.fill();
@@ -144,9 +162,13 @@ function draw() {
     ctx.fillStyle = 'green';
   ctx.fillRect(player.x, player.y, player.width, player.height);
 
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(loadingBar.x, loadingBar.y, loadingBar.width, loadingBar.height);
+
+  ctx.fillStyle = "white";
   ctx.font = "bold 16px Arial";
   ctx.fillText(fps + ' fps', 20, 20);
+  ctx.fillText(player.x, 20, 50);
 
   ctx.beginPath();
   ctx.moveTo(0, 0);
@@ -166,17 +188,24 @@ function draw() {
   ctx.stroke();
 }
 
+var willCollide;
+var minXOffset;
+var minYOffset;
+var xOffset;
+var yOffset;
+var xDiff;
+var yDiff;
 function handleCollision(staticObj, dynamicObj) {
   var willCollide = {l:false, r:false, t:false, b:false};
 
-  var minXOffset = staticObj.width/2 + dynamicObj.width/2;
-  var minYOffset = staticObj.height/2 + dynamicObj.height/2;
+  minXOffset = staticObj.width/2 + dynamicObj.width/2;
+  minYOffset = staticObj.height/2 + dynamicObj.height/2;
 
-  var xOffset = (staticObj.x+staticObj.width/2) - (dynamicObj.x+dynamicObj.width/2);
-  var yOffset = (staticObj.y+staticObj.height/2) - (dynamicObj.y+dynamicObj.height/2);
+  xOffset = (staticObj.x+staticObj.width/2) - (dynamicObj.x+dynamicObj.width/2);
+  yOffset = (staticObj.y+staticObj.height/2) - (dynamicObj.y+dynamicObj.height/2);
 
-  var xDiff = minXOffset-Math.abs(xOffset);
-  var yDiff = minYOffset-Math.abs(yOffset);
+  xDiff = minXOffset-Math.abs(xOffset);
+  yDiff = minYOffset-Math.abs(yOffset);
 
   if (xDiff >= 0 && yDiff >=0) { // collision
     if (yDiff < xDiff) { // collision on top or bottom

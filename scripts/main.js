@@ -5,6 +5,7 @@ var friction = 0.8;
 var gravity = 1000;
 var gameRunning = false;
 var viewportModifier = 1;
+var currentLevelIndex = 0;
 
 setup();
 start();
@@ -21,11 +22,14 @@ function setup() {
   viewport.height = height;
   resize();
   $('.startgame').click(function() {
-    startLevel(0, player);
+    startLevel(currentLevelIndex, player);
+  });
+  $('.nextgame').click(function() {
+    startLevel(++currentLevelIndex, player);
   });
   $(window).on('keyup', function(e) {
     if (!gameRunning && e.keyCode===32)
-      startLevel(0, player);
+      startLevel(currentLevelIndex, player);
   });
   $(window).on('resize', resize);
 }

@@ -5,6 +5,50 @@ var levels = [
     playerX: 50,
     playerY: 190,
     walls: [
+      {x:100, y:180, width:20, height:20},
+      {x:300, y:160, width:40, height:40},
+      {x:500, y:180, width:100, height:10},
+      {x:550, y:160, width:120, height:10},
+      {x:600, y:140, width:140, height:10},
+      {x:650, y:120, width:160, height:10},
+      {x:700, y:100, width:180, height:10},
+      {x:880, y:100, width:20, height:100},
+      {x:0, y:0, width:1, height:200},
+      {x:1000, y:0, width:1, height: 200}
+    ],
+    safeZone: {x:960, y:0, width:40, height:200},
+    loadingBar: {x:0, y:0, width:0, height:200}
+  },
+
+  {
+    width: 1000,
+    height: 200,
+    playerX: 50,
+    playerY: 190,
+    walls: [
+      {x:240, y:0, width:40, height:160},
+      {x:320, y:30, width:40, height:170},
+      {x:550, y:30, width:40, height:170},
+      {x:700, y:0, width:40, height:160},
+      {x:810, y:30, width:40, height:170},
+      {x:790, y:80, width:20, height:10},
+      {x:790, y:30, width:20, height:10},
+      {x:740, y:105, width:20, height:10},
+      {x:740, y:55, width:20, height:10},
+      {x:790, y:130, width:20, height:10},
+      {x:0, y:0, width:1, height:200},
+      {x:1000, y:0, width:1, height: 200}
+    ],
+    safeZone: {x:960, y:0, width:40, height:200},
+    loadingBar: {x:0, y:0, width:0, height:200}
+  },
+
+  {
+    width: 1000,
+    height: 200,
+    playerX: 50,
+    playerY: 190,
+    walls: [
       {x:150, y:167, width:90, height:33},
       {x:240, y:133, width:40, height:67},
       {x:280, y:80, width:40, height:120},
@@ -23,10 +67,11 @@ var levels = [
     loadingBar: {x:0, y:0, width:0, height:200}
   }
 ];
+var levelNum = 0;
 
 var filenames = ['nsa_keylogger.exe', 'RAM_32GB.bat', 'README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
 
-var currentLevel = levels[0];
+var currentLevel = levels[levelNum];
 var response, file, secondsLabel;
 function startLevel(number, player) {
   $(window).unbind('keyup');
@@ -34,6 +79,7 @@ function startLevel(number, player) {
   $('#overlay').css('display', 'none');
   $('.prompt').css('display', 'none');
   currentLevel = levels[number];
+  levelNum = number;
   currentLevel.loadingBar.width = 0;
   player.x = currentLevel.playerX;
   player.y = currentLevel.playerY;
@@ -209,8 +255,11 @@ function winGame() {
     $('#overlay').css('display', 'block');
     $('#success').css('display', 'block');
     $(window).on('keyup', function(e) {
-      if (!gameRunning && e.keyCode===32)
-      startLevel(0, player);
+      if (!gameRunning && e.keyCode===32) {
+        currentLevelIndex += 1;
+        levelNum = currentLevelIndex;
+        startLevel(levelNum, player);
+      }
     });
   }, 500);
   gameRunning = false;
@@ -221,7 +270,7 @@ function loseGame() {
     $('#fail').css('display', 'block');
     $(window).on('keyup', function(e) {
       if (!gameRunning && e.keyCode===32)
-      startLevel(0, player);
+      startLevel(levelNum, player);
     });
   }, 500);
   gameRunning = false;

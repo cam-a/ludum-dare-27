@@ -32,6 +32,8 @@ function setup() {
     player.x = 50;
     player.y = 190;
     currentLevelIndex = $(this).attr('index');
+    file = filenames[currentLevelIndex];
+    $('#start span').html(file);
     $('#file-list').css('display', 'none');
     $('#start').css('display', 'block');
     currentLevel = levels[currentLevelIndex];

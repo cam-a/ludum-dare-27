@@ -11,14 +11,14 @@ $(window).click(function() {
   $(window).unbind('click');
   $('#intro').css('display', 'none');
   $('#main-h1').css('display', 'block');
-  $('#start').css('display', 'block');
   $('#download-wait').css('display', 'block');
+  $('#file-list').css('display', 'block');
   setup();
   start();
 })
 
 function setup() {
-  file = filenames[Math.floor(Math.random()*filenames.length)];
+  file = filenames[0];
   $('#start span').html(file);
   viewport = document.getElementById('viewport');
   ctx = viewport.getContext('2d');
@@ -28,35 +28,24 @@ function setup() {
   viewport.width = width;
   viewport.height = height;
   resize();
+  $('.file').click(function() {
+    player.x = 50;
+    player.y = 190;
+    currentLevelIndex = $(this).attr('index');
+    $('#file-list').css('display', 'none');
+    $('#start').css('display', 'block');
+    currentLevel = levels[currentLevelIndex];
+    $(window).on('keyup', function(e) {
+    if (!gameRunning && e.keyCode===32)
+      startLevel(currentLevelIndex, player);
+    });
+  });
   $('.startgame').click(function() {
     startLevel(currentLevelIndex, player);
   });
-  $('.nextgame').click(function() {
-    if (currentLevelIndex+1 < levels.length) {
-      currentLevelIndex++;
-      $('#success').css('display', 'none');
-      file = filenames[Math.floor(Math.random()*filenames.length)];
-      $('#start span').html(file);
-      $('#start').css('display', 'block');
-      player.x = 50;
-      player.y = 190;
-      currentLevel = levels[currentLevelIndex];
-
-      $(window).on('keyup', function(e) {
-        if (!gameRunning && e.keyCode===32) {
-          startLevel(currentLevelIndex, player);
-        }
-      });
-    }
-    else {
-      $('#success').css('display', 'none');
-      $('#credits').css('display', 'block');
-    }
-  });
-
-  $(window).on('keyup', function(e) {
-    if (!gameRunning && e.keyCode===32)
-      startLevel(currentLevelIndex, player);
+  $('.newgame').click(function() {
+    $('.prompt').css('display', 'none');
+    $('#file-list').css('display', 'block');
   });
   $(window).on('resize', resize);
 }

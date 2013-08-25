@@ -50,17 +50,19 @@ var levels = [
     playerY: 190,
     walls: [
       {x:100, y:180, width:100, height:20},
-      {x:860, y:180, width:100, height:20},
+      {x:860, y:180, width:140, height:20},
       {x:520, y:40, width:20, height:160},
+      {x:860, y:40, width:20, height:140},
       {x:700, y:0, width:20, height:100},
       {x:0, y:0, width:1, height:200},
       {x:1000, y:0, width:1, height: 200}
     ],
     dangerZones: [
       {x:200, y:190, width:660, height:10},
-      {x:522, y:35, width:16, height:5}
+      {x:522, y:35, width:16, height:5},
+      {x:862, y:35, width:16, height:5}
     ],
-    safeZone: {x:960, y:0, width:40, height:200},
+    safeZone: {x:880, y:40, width:120, height:140},
     loadingBar: {x:0, y:0, width:0, height:200}
   },
 
@@ -113,7 +115,7 @@ var levels = [
 ];
 var levelNum = 0;
 
-var filenames = ['nsa_keylogger.exe', 'RAM_32GB.bat', 'README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
+var filenames = ['nsa_keylogger.exe', 'README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
 
 var currentLevel = levels[levelNum];
 var response, file, secondsLabel;

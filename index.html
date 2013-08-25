@@ -36,7 +36,7 @@
         text-align: left;
         line-height: 1.5em;
       }
-      .button {
+      .button, .file {
         background-color: grey;
         border: 1px solid black;
         border-radius: 5px;
@@ -45,7 +45,10 @@
         padding: 5px;
         cursor: default;
       }
-      .button:active {
+      .file {
+        display: block;
+      }
+      .button:active, .file:active {
         background-color: lightgrey;
       }
       #success {
@@ -75,6 +78,9 @@
       #download-wait {
         display: none;
       }
+      #file-list {
+        display: none;
+      }
     </style>
   </head>
 
@@ -89,15 +95,15 @@
     <div id='overlay'></div>
     <div class='prompt' id='start'>
       <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?</p><p>Click one of the buttons below or press the spacebar to start.</p>
-      <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
+      <div class='button startgame'>Yes</div><div class='button newgame'>Download another file</div>
     </div>
     <div class='prompt' id='success'>
       <p>File was successfully downloaded!</p>
-      <div class='button startgame'>Download again</div><div class='button nextgame'>Download another file</div>
+      <div class='button startgame'>Download again</div><div class='button newgame'>Download another file</div>
     </div>
     <div class='prompt' id='fail'>
       <p>Download was unexpectedly stopped. Try again?</p><p>Click one of the buttons below or press the spacebar to start.</p>
-      <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
+      <div class='button startgame'>Yes</div><div class='button newgame'>Download another file</div>
     </div>
     <div class='prompt' id='credits'>
       <h1>Thank you for playing Download Simulator 2013!</h1>
@@ -114,6 +120,15 @@
       <li>Win a level by being in the green endzone before the loading bar touches you.</li>
       </ul>
       <h3>Click anywhere to begin</h3>
+    </div>
+    <div class='prompt' id='file-list'>
+      <h1>File List</h1>
+      <p>Please click the file you'd like to download.</p>
+      <div index='0' class='file'>nsa_keylogger.exe</div>
+      <div index='1' class='file'>README.bat</div>
+      <div index='2' class='file'>harmless.exe</div>
+      <div index='3' class='file'>notatrojan.exe</div>
+      <div index='4' class='file'>HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE</div>
     </div>
     <script src='scripts/jquery.min.js'></script>
     <script src='scripts/levels.js'></script>

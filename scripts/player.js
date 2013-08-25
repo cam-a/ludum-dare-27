@@ -13,7 +13,8 @@ var player = {
   jumpDecel:0.5,
   jumpedOnKeyPress:false,
   airborne:false,
-  collidingOn:{top:false, bottom:false, left:false, right:false}
+  collidingOn:{top:false, bottom:false, left:false, right:false},
+  safe: false
 };
 
 var keysDown = {};

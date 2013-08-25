@@ -32,17 +32,26 @@ function startLevel(number, player) {
   $('#overlay').css('display', 'none');
   $('.prompt').css('display', 'none');
   currentLevel = levels[number];
+  currentLevel.loadingBar.width = 0;
   player.x = currentLevel.playerX;
   player.y = currentLevel.playerY;
+  player.safe = false;
+  player.vx = 0;
+  player.vy = 0;
   file = filenames[Math.floor(Math.random()*filenames.length)];
   gameRunning = true;
 }
 
 var elapsedSeconds, willCollide;
 function updateLevel(dt, player) {
-  if (areColliding(currentLevel.safeZone, player)) winGame();
-  if (areColliding(currentLevel.loadingBar, player)) loseGame();
-  if (currentLevel.loadingBar.width < 1000) currentLevel.loadingBar.width += dt/10;
+  if (areColliding(currentLevel.safeZone, player)) player.safe = true;
+  if (areColliding(currentLevel.loadingBar, player) && !player.safe) loseGame();
+  if (currentLevel.loadingBar.width < 1000) {
+    currentLevel.loadingBar.width += dt/10;
+  }
+  else {
+    winGame();
+  }
 
   elapsedSeconds = dt/1000;
 

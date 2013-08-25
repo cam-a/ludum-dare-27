@@ -17,8 +17,12 @@ function setup() {
   viewport.width = width;
   viewport.height = height;
 
-  $('.button').click(function() {
+  $('.startgame').click(function() {
     startLevel(0, player);
+  });
+  $(window).keyup(function() {
+    if (!gameRunning)
+      startLevel(0, player);
   });
 }
 function start() {

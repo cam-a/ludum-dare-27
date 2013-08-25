@@ -15,7 +15,7 @@
         right: 0;
         background-color: rgba(0,0,0,0.8);
       }
-      #prompt {
+      .prompt {
         position: absolute;
         left: 25%;
         right: 25%;
@@ -24,6 +24,11 @@
         border: 1px solid black;
         text-align: center;
         border-radius: 10px;
+        padding: 5px;
+      }
+      #prompt p {
+        text-align: left;
+        padding: 5px;
       }
       .button {
         background-color: grey;
@@ -37,6 +42,12 @@
       .button:active {
         background-color: lightgrey;
       }
+      #success {
+        display: none;
+      }
+      #fail {
+        display: none;
+      }
     </style>
   </head>
 
@@ -44,8 +55,16 @@
     <h1>Downloading File...</h1>
     <canvas id='viewport' width='800' height='600'></canvas>
     <div id='overlay'></div>
-    <div id='prompt'>
-      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?</p>
+    <div class='prompt' id='start'>
+      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?<br>Press enter or click one of the buttons below.</p>
+      <div class='button'>Yes</div><div class='button'>Okay</div><div class='button'>Sure</div>
+    </div>
+    <div class='prompt' id='success'>
+      <p>File was successfully downloaded!</p>
+      <div class='button'>Download again</div><div class='button'>Download another file</div>
+    </div>
+    <div class='prompt' id='fail'>
+      <p>Download was unexpectedly stopped. Try again?</p>
       <div class='button'>Yes</div><div class='button'>Okay</div><div class='button'>Sure</div>
     </div>
     <script src='scripts/jquery.min.js'></script>

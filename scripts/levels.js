@@ -30,7 +30,7 @@ var currentLevel = levels[0];
 var response, file;
 function startLevel(number, player) {
   $('#overlay').css('display', 'none');
-  $('#prompt').css('display', 'none');
+  $('.prompt').css('display', 'none');
   currentLevel = levels[number];
   player.x = currentLevel.playerX;
   player.y = currentLevel.playerY;
@@ -177,10 +177,12 @@ function areColliding(staticObj, dynamicObj) {
 }
 
 function winGame() {
-  alert('you won the game');
+  $('#overlay').css('display', 'block');
+  $('#success').css('display', 'block');
   gameRunning = false;
 }
 function loseGame() {
-  alert('you lost the game');
+  $('#overlay').css('display', 'block');
+  $('#fail').css('display', 'block');
   gameRunning = false;
 }

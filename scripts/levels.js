@@ -27,8 +27,10 @@ var levels = [
 var filenames = ['README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
 
 var currentLevel = levels[0];
-var response, file;
+var response, file, secondsLabel;
 function startLevel(number, player) {
+  $(window).unbind('keyup');
+  $('h1').html('Ready?');
   $('#overlay').css('display', 'none');
   $('.prompt').css('display', 'none');
   currentLevel = levels[number];
@@ -38,19 +40,35 @@ function startLevel(number, player) {
   player.safe = false;
   player.vx = 0;
   player.vy = 0;
+  secondsLabel = 10;
+  $('#download-wait').css('display', 'block');
+  $('#download-done').css('display', 'none');
+  $('#finish-timer span').html(secondsLabel);
   file = filenames[Math.floor(Math.random()*filenames.length)];
-  gameRunning = true;
+  setTimeout(function() {
+    $('#finish-timer').css('display', 'block');
+    $('#download-wait').css('display', 'none');
+    gameRunning = true;
+    $('h1').html('Downloading file...');
+  }, 1000);
 }
 
-var elapsedSeconds, willCollide;
+var elapsedSeconds, willCollide, secondsLeft;
 function updateLevel(dt, player) {
   if (areColliding(currentLevel.safeZone, player)) player.safe = true;
+  else player.safe = false;
   if (areColliding(currentLevel.loadingBar, player) && !player.safe) loseGame();
   if (currentLevel.loadingBar.width < 1000) {
     currentLevel.loadingBar.width += dt/10;
   }
   else {
     winGame();
+  }
+
+  secondsLeft = 10-(~~(currentLevel.loadingBar.width/100));
+  if (secondsLeft < secondsLabel) {
+    secondsLabel = secondsLeft;
+    $('#finish-timer span').html(secondsLabel);
   }
 
   elapsedSeconds = dt/1000;
@@ -186,12 +204,26 @@ function areColliding(staticObj, dynamicObj) {
 }
 
 function winGame() {
-  $('#overlay').css('display', 'block');
-  $('#success').css('display', 'block');
+  $('#finish-timer').css('display', 'none');
+  $('#download-done').css('display', 'block');
+  setTimeout(function() {
+    $('#overlay').css('display', 'block');
+    $('#success').css('display', 'block');
+    $(window).on('keyup', function(e) {
+      if (!gameRunning && e.keyCode===32)
+      startLevel(0, player);
+    });
+  }, 500);
   gameRunning = false;
 }
 function loseGame() {
-  $('#overlay').css('display', 'block');
-  $('#fail').css('display', 'block');
+  setTimeout(function() {
+    $('#overlay').css('display', 'block');
+    $('#fail').css('display', 'block');
+    $(window).on('keyup', function(e) {
+      if (!gameRunning && e.keyCode===32)
+      startLevel(0, player);
+    });
+  }, 500);
   gameRunning = false;
 }

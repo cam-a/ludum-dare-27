@@ -20,8 +20,8 @@ function setup() {
   $('.startgame').click(function() {
     startLevel(0, player);
   });
-  $(window).keyup(function() {
-    if (!gameRunning)
+  $(window).on('keyup', function(e) {
+    if (!gameRunning && e.keyCode===32)
       startLevel(0, player);
   });
 }

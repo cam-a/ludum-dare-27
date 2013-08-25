@@ -48,15 +48,29 @@
       #fail {
         display: none;
       }
+      #wrapper {
+        text-align: center;
+      }
+      #download-done {
+        display: none;
+      }
+      #finish-timer {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
-    <h1>Downloading File...</h1>
-    <canvas id='viewport' width='800' height='600'></canvas>
+    <h1>File Download</h1>
+    <div id='wrapper'>
+      <canvas id='viewport' width='800' height='600'></canvas>
+    </div>
+    <h3 id='finish-timer'>Your download will be done in <span>10</span> seconds.</h3>
+    <h3 id='download-done'>Your download is complete!</h3>
+    <h3 id='download-wait'>Waiting for download to begin...</h3>
     <div id='overlay'></div>
     <div class='prompt' id='start'>
-      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?<br>Click one of the buttons below or press any key to start.</p>
+      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?<br>Click one of the buttons below or press the spacebar to start.</p>
       <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
     </div>
     <div class='prompt' id='success'>
@@ -64,7 +78,7 @@
       <div class='button startgame'>Download again</div><div class='button nextgame'>Download another file</div>
     </div>
     <div class='prompt' id='fail'>
-      <p>Download was unexpectedly stopped. Try again? Click one of the buttons below or press any key to start.</p>
+      <p>Download was unexpectedly stopped. Try again?<br>Click one of the buttons below or press the spacebar to start.</p>
       <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
     </div>
     <script src='scripts/jquery.min.js'></script>

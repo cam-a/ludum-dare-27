@@ -6,22 +6,6 @@ var fps;
 var ctx;
 var width;
 var height;
-var player = {x:0, y:0, width:10, height:10, vx:0, vy:0, ax:5000, jumpPower:300, sticking:500, wallJumpPower:500, wallJumpAngle:Math.PI/4, jumpDecel:0.5, jumpedOnKeyPress:false, airborne:false, collidingOn:{top:false, bottom:false, left:false, right:false}};
-var level = [
-  {x:150, y:167, width:90, height:33},
-  {x:240, y:133, width:40, height:67},
-  {x:280, y:80, width:40, height:120},
-  {x:280, y:0, width:40, height:65},
-  {x:350, y:0, width:70, height:180},
-  {x:450, y:40, width:200, height:160},
-  {x:690, y:0, width:40, height:155},
-  {x:750, y:140, width:40, height:60},
-  {x:810, y:0, width:80, height:155},
-  {x:960, y:120, width:40, height:20},
-  {x:940, y:80, width:20, height:60},
-  {x:0, y:0, width:1, height:200},
-  {x:1000, y:0, width:1, height: 200}
-];
 var loadingBar = {x:0, y:0, width:0, height:200};
 var timeLeft = 10000;
 var TWO_PI = 2*Math.PI;
@@ -77,8 +61,8 @@ function update(dt) {
   player.x += player.vx*elapsedSeconds;
 
   player.collidingOn = {top:false, bottom:false, left:false, right:false};
-  for (i=0; i<level.length; i++) {
-    if (handleCollision(level[i], player)) willCollide = true;
+  for (i=0; i<levels[0].walls.length; i++) {
+    if (handleCollision(levels[0].walls[i], player)) willCollide = true;
   }
   if (!willCollide) {
     player.airborne = true;
@@ -149,43 +133,7 @@ function update(dt) {
 }
 
 function draw() {
-  ctx.clearRect(0, 0, width, height);
-  ctx.fillStyle = 'black';
-
-  for(i=0; i<level.length; i++) {
-    ctx.rect(level[i].x, level[i].y, level[i].width, level[i].height);
-  }
-  ctx.fill();
-  if (player.sticking > 0)
-    ctx.fillStyle = 'red';
-  else
-    ctx.fillStyle = 'green';
-  ctx.fillRect(player.x, player.y, player.width, player.height);
-
-  ctx.fillStyle = 'blue';
-  ctx.fillRect(loadingBar.x, loadingBar.y, loadingBar.width, loadingBar.height);
-
-  ctx.fillStyle = "white";
-  ctx.font = "bold 16px Arial";
-  ctx.fillText(fps + ' fps', 20, 20);
-  ctx.fillText(player.x, 20, 50);
-
-  ctx.beginPath();
-  ctx.moveTo(0, 0);
-  ctx.lineTo(0, height);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(0, height);
-  ctx.lineTo(width, height);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(width, height);
-  ctx.lineTo(width, 0);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(width, 0);
-  ctx.lineTo(0, 0);
-  ctx.stroke();
+  renderLevel(ctx, levels[0], player);
 }
 
 var willCollide;

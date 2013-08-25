@@ -57,7 +57,8 @@ var levels = [
       {x:1000, y:0, width:1, height: 200}
     ],
     dangerZones: [
-      {x:200, y:190, width:660, height:10}
+      {x:200, y:190, width:660, height:10},
+      {x:522, y:35, width:16, height:5}
     ],
     safeZone: {x:960, y:0, width:40, height:200},
     loadingBar: {x:0, y:0, width:0, height:200}
@@ -85,6 +86,29 @@ var levels = [
     ],
     safeZone: {x:960, y:80, width:40, height:40},
     loadingBar: {x:0, y:0, width:0, height:200}
+  },
+  {
+    width: 1000,
+    height: 200,
+    playerX: 50,
+    playerY: 190,
+    walls: [
+      {x:200, y:160, width:20, height:40},
+      {x:940, y:100, width:20, height:20},
+      {x:960, y:60, width:20, height:60},
+      {x:740, y:60, width:220, height:20},
+      {x:700, y:60, width:40, height:110},
+      {x:300, y:50, width:20, height:100},
+      {x:0, y:0, width:1, height:200},
+      {x:1000, y:0, width:1, height: 200}
+    ],
+    safeZone: {x:940, y:80, width:20, height:20},
+    dangerZones: [
+      {x:220, y:190, width:780, height:10},
+      {x:500, y:90, width:20, height:100},
+      {x:500, y:0, width:20, height:60}
+    ],
+    loadingBar: {x:0, y:0, width:0, height:200}
   }
 ];
 var levelNum = 0;
@@ -108,6 +132,7 @@ function startLevel(number, player) {
   player.vy = 0;
   secondsLabel = 10;
   $('#download-wait').css('display', 'block');
+  $('#finish-timer').css('display', 'none');
   $('#download-done').css('display', 'none');
   $('#finish-timer span').html(secondsLabel);
   setTimeout(function() {

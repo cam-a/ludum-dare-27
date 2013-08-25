@@ -30,6 +30,11 @@
       .prompt p {
         text-align: left;
         padding: 5px 22px;
+        line-height: 1.5em;
+      }
+      .prompt ul {
+        text-align: left;
+        line-height: 1.5em;
       }
       .button {
         background-color: grey;
@@ -61,6 +66,15 @@
       #credits {
         display: none;
       }
+      #main-h1 {
+        display: none;
+      }
+      #start {
+        display: none;
+      }
+      #download-wait {
+        display: none;
+      }
     </style>
   </head>
 
@@ -87,7 +101,19 @@
     </div>
     <div class='prompt' id='credits'>
       <h1>Thank you for playing Download Simulator 2013!</h1>
-      <p>This game was made in two days for Ludum Dare 27 using Javascript and HTML5's canvas with no libraries.</p>
+      <p>This game was made in two days for Ludum Dare 27 using Javascript and HTML5's canvas with no libraries. The theme was '10 seconds'.</p>
+    </div>
+    <div class='prompt' id='intro'>
+      <h1>Download Simulator 2013</h1>
+      <p>This game runs in Firefox and Chrome. It was made in two days for Ludum Dare 27 using Javascript and HTML5's canvas with no libraries. The theme was '10 seconds'.
+      <br>Collision detection is not optimized, so a large enough reduction in framerate may cause you to go through walls. If this happens often, try switching browsers (it tends to run better in Firefox), refreshing the page, or closing memory-intensive applications.</p>
+      <h2>Instructions</h2>
+      <ul>
+      <li>You're controlling the red dot inside the bar. You have ten seconds to complete each level.</li>
+      <li>Use the left and right arrow keys to move and the spacebar to jump.</li>
+      <li>Win a level by being in the green endzone before the loading bar touches you.</li>
+      </ul>
+      <h3>Click anywhere to begin</h3>
     </div>
     <script src='scripts/jquery.min.js'></script>
     <script src='scripts/levels.js'></script>

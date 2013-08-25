@@ -7,8 +7,15 @@ var gameRunning = false;
 var viewportModifier = 1;
 var currentLevelIndex = 0;
 
-setup();
-start();
+$(window).click(function() {
+  $(window).unbind('click');
+  $('#intro').css('display', 'none');
+  $('#main-h1').css('display', 'block');
+  $('#start').css('display', 'block');
+  $('#download-wait').css('display', 'block');
+  setup();
+  start();
+})
 
 function setup() {
   file = filenames[Math.floor(Math.random()*filenames.length)];
@@ -27,7 +34,6 @@ function setup() {
   $('.nextgame').click(function() {
     if (currentLevelIndex+1 < levels.length) {
       currentLevelIndex++;
-      console.log(currentLevelIndex + ' ' + levels.length);
       $('#success').css('display', 'none');
       file = filenames[Math.floor(Math.random()*filenames.length)];
       $('#start span').html(file);

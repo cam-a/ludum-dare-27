@@ -24,10 +24,21 @@ var levels = [
   }
 ];
 
-var elapsedSeconds;
-var willCollide;
-function updateLevel(dt, level, player) {
-  level.loadingBar.width += dt/10;
+var filenames = ['README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
+
+var currentLevel = levels[0];
+var response, file;
+function startLevel(number, player) {
+  currentLevel = levels[number];
+  player.x = currentLevel.playerX;
+  player.y = currentLevel.playerY;
+  file = filenames[Math.floor(Math.random()*filenames.length)];
+  gameRunning = true;
+}
+
+var elapsedSeconds, willCollide;
+function updateLevel(dt, player) {
+  if (currentLevel.loadingBar.width < 1000) currentLevel.loadingBar.width += dt/10;
 
   elapsedSeconds = dt/1000;
 
@@ -37,8 +48,8 @@ function updateLevel(dt, level, player) {
   player.x += player.vx*elapsedSeconds;
 
   player.collidingOn = {top:false, bottom:false, left:false, right:false};
-  for (i=0; i<level.walls.length; i++) {
-    if (handleCollision(level.walls[i], player)) willCollide = true;
+  for (i=0; i<currentLevel.walls.length; i++) {
+    if (handleCollision(currentLevel.walls[i], player)) willCollide = true;
   }
   if (!willCollide) {
     player.airborne = true;
@@ -61,12 +72,12 @@ function updateLevel(dt, level, player) {
   }
 }
 
-function renderLevel(ctx, level, player) {
+function renderLevel(ctx, player) {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = 'black';
 
-  for(i=0; i<level.walls.length; i++) {
-    ctx.rect(level.walls[i].x, level.walls[i].y, level.walls[i].width, level.walls[i].height);
+  for(i=0; i<currentLevel.walls.length; i++) {
+    ctx.rect(currentLevel.walls[i].x, currentLevel.walls[i].y, currentLevel.walls[i].width, currentLevel.walls[i].height);
   }
   ctx.fill();
 
@@ -74,10 +85,10 @@ function renderLevel(ctx, level, player) {
   ctx.fillRect(player.x, player.y, player.width, player.height);
 
   ctx.fillStyle = 'rgba(0,255,0,0.5)';
-  ctx.fillRect(level.safeZone.x, level.safeZone.y, level.safeZone.width, level.safeZone.height);
+  ctx.fillRect(currentLevel.safeZone.x, currentLevel.safeZone.y, currentLevel.safeZone.width, currentLevel.safeZone.height);
 
   ctx.fillStyle = 'green';
-  ctx.fillRect(level.loadingBar.x, level.loadingBar.y, level.loadingBar.width, level.loadingBar.height);
+  ctx.fillRect(currentLevel.loadingBar.x, currentLevel.loadingBar.y, currentLevel.loadingBar.width, currentLevel.loadingBar.height);
 
   ctx.beginPath();
   ctx.moveTo(0, 0);
@@ -97,13 +108,7 @@ function renderLevel(ctx, level, player) {
   ctx.stroke();
 }
 
-var willCollide;
-var minXOffset;
-var minYOffset;
-var xOffset;
-var yOffset;
-var xDiff;
-var yDiff;
+var willCollide, minXOffset, minYOffset, xOffset, yOffset, xDiff, yDiff;
 function handleCollision(staticObj, dynamicObj) {
   var willCollide = {l:false, r:false, t:false, b:false};
 

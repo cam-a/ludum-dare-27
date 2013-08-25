@@ -1,17 +1,9 @@
-var viewport;
-var win;
-var then;
-var now;
-var fps;
-var ctx;
-var width;
-var height;
+var viewport, win, then, now, fps, ctx, width, height, newX, newY;
 var timeLeft = 10000;
 var TWO_PI = 2*Math.PI;
 var friction = 0.8;
 var gravity = 1000;
-var newX;
-var newY;
+var gameRunning = false;
 
 setup();
 start();
@@ -24,11 +16,15 @@ function setup() {
   height = 200; //win.height();
   viewport.width = width;
   viewport.height = height;
+
+  $('.button').click(function() {
+    $('#overlay').css('display', 'none');
+    $('#prompt').css('display', 'none');
+    startLevel(0, player);
+  });
 }
 function start() {
   then = Date.now();
-  player.x = 50;
-  player.y = 190;
   requestAnimationFrame(frame);
 }
 
@@ -46,11 +42,12 @@ function update(dt) {
 
   fps = ~~(1000/dt);
   elapsedSeconds = dt/1000;
-
-  updateLevel(dt, levels[0], player);
-  updatePlayer(dt, keysDown);
+  if (gameRunning) {
+    updateLevel(dt, player);
+    updatePlayer(dt, keysDown);
+  }
 }
 
 function draw() {
-  renderLevel(ctx, levels[0], player);
+  renderLevel(ctx, player);
 }

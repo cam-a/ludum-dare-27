@@ -1,6 +1,6 @@
 var player = {
-  x:0,
-  y:0,
+  x:50,
+  y:190,
   width:10,
   height:10,
   vx:0,

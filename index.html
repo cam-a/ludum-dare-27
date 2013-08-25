@@ -3,10 +3,51 @@
 <html>
   <head>
     <title>Ludum Dare 27</title>
+    <style type='text/css'>
+      body {
+        font-family: Helvetica;
+      }
+      #overlay {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.8);
+      }
+      #prompt {
+        position: absolute;
+        left: 25%;
+        right: 25%;
+        top: 20px;
+        background-color: white;
+        border: 1px solid black;
+        text-align: center;
+        border-radius: 10px;
+      }
+      .button {
+        background-color: grey;
+        border: 1px solid black;
+        border-radius: 5px;
+        display: inline-block;
+        margin: 20px;
+        padding: 5px;
+        cursor: default;
+      }
+      .button:active {
+        background-color: lightgrey;
+      }
+    </style>
   </head>
 
   <body>
+    <h1>Downloading File...</h1>
     <canvas id='viewport' width='800' height='600'></canvas>
+    <div id='overlay'></div>
+    <div id='prompt'>
+      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?</p>
+      <div class='button'>Yes</div><div class='button'>Okay</div><div class='button'>Sure</div>
+    </div>
     <script src='scripts/jquery.min.js'></script>
     <script src='scripts/levels.js'></script>
     <script src='scripts/player.js'></script>

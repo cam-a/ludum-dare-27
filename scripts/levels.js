@@ -195,9 +195,14 @@ function renderLevel(ctx, player) {
   ctx.fillStyle = 'rgba(0,255,0,0.5)';
   ctx.fillRect(currentLevel.safeZone.x*viewportModifier, currentLevel.safeZone.y*viewportModifier, currentLevel.safeZone.width*viewportModifier, currentLevel.safeZone.height*viewportModifier);
 
-  ctx.fillStyle = 'green';
+  var grd = ctx.createLinearGradient(0, 0, currentLevel.loadingBar.width*viewportModifier, currentLevel.loadingBar.height*viewportModifier);
+  // light blue
+  grd.addColorStop(0, 'lightgreen');   
+  // dark blue
+  grd.addColorStop(1, 'darkgreen');
+  ctx.fillStyle = grd;
   ctx.fillRect(currentLevel.loadingBar.x*viewportModifier, currentLevel.loadingBar.y*viewportModifier, currentLevel.loadingBar.width*viewportModifier, currentLevel.loadingBar.height*viewportModifier);
-
+  
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(0, height*viewportModifier);
@@ -286,24 +291,6 @@ function winGame() {
   setTimeout(function() {
     $('#overlay').css('display', 'block');
     $('#success').css('display', 'block');
-    // $(window).on('keyup', function(e) {
-    //   if (!gameRunning && e.keyCode===32) {
-    //     currentLevelIndex++;
-    //     $('#success').css('display', 'none');
-    //     file = filenames[Math.floor(Math.random()*filenames.length)];
-    //     $('#start span').html(file);
-    //     $('#start').css('display', 'block');
-    //     $(window).unbind('keyup');
-    //     currentLevel = levels[currentLevelIndex];
-    //     player.x = 50;
-    //     player.y = 190;
-    //     $(window).on('keyup', function(e) {
-    //       if (!gameRunning && e.keyCode===32) {
-    //         startLevel(currentLevelIndex, player);
-    //       }
-    //     });
-    //   }
-    // });
   }, 500);
   gameRunning = false;
 }

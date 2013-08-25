@@ -58,11 +58,14 @@
       #finish-timer {
         display: none;
       }
+      #credits {
+        display: none;
+      }
     </style>
   </head>
 
   <body>
-    <h1>File Download</h1>
+    <h1 id='main-h1'>File Download</h1>
     <div id='wrapper'>
       <canvas id='viewport' width='800' height='600'></canvas>
     </div>
@@ -71,7 +74,7 @@
     <h3 id='download-wait'>Waiting for download to begin...</h3>
     <div id='overlay'></div>
     <div class='prompt' id='start'>
-      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?<br>Click one of the buttons below or press the spacebar to start.</p>
+      <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?</p><p>Click one of the buttons below or press the spacebar to start.</p>
       <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
     </div>
     <div class='prompt' id='success'>
@@ -79,8 +82,12 @@
       <div class='button startgame'>Download again</div><div class='button nextgame'>Download another file</div>
     </div>
     <div class='prompt' id='fail'>
-      <p>Download was unexpectedly stopped. Try again?<br>Click one of the buttons below or press the spacebar to start.</p>
+      <p>Download was unexpectedly stopped. Try again?</p><p>Click one of the buttons below or press the spacebar to start.</p>
       <div class='button startgame'>Yes</div><div class='button startgame'>Okay</div><div class='button startgame'>Sure</div>
+    </div>
+    <div class='prompt' id='credits'>
+      <h1>Thank you for playing Download Simulator 2013!</h1>
+      <p>This game was made in two days for Ludum Dare 27 using Javascript and HTML5's canvas with no libraries.</p>
     </div>
     <script src='scripts/jquery.min.js'></script>
     <script src='scripts/levels.js'></script>

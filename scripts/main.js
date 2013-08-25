@@ -25,8 +25,29 @@ function setup() {
     startLevel(currentLevelIndex, player);
   });
   $('.nextgame').click(function() {
-    startLevel(++currentLevelIndex, player);
+    if (currentLevelIndex+1 < levels.length) {
+      currentLevelIndex++;
+      console.log(currentLevelIndex + ' ' + levels.length);
+      $('#success').css('display', 'none');
+      file = filenames[Math.floor(Math.random()*filenames.length)];
+      $('#start span').html(file);
+      $('#start').css('display', 'block');
+      player.x = 50;
+      player.y = 190;
+      currentLevel = levels[currentLevelIndex];
+
+      $(window).on('keyup', function(e) {
+        if (!gameRunning && e.keyCode===32) {
+          startLevel(currentLevelIndex, player);
+        }
+      });
+    }
+    else {
+      $('#success').css('display', 'none');
+      $('#credits').css('display', 'block');
+    }
   });
+
   $(window).on('keyup', function(e) {
     if (!gameRunning && e.keyCode===32)
       startLevel(currentLevelIndex, player);

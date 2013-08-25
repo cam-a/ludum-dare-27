@@ -49,6 +49,26 @@ var levels = [
     playerX: 50,
     playerY: 190,
     walls: [
+      {x:100, y:180, width:100, height:20},
+      {x:860, y:180, width:100, height:20},
+      {x:520, y:40, width:20, height:160},
+      {x:700, y:0, width:20, height:100},
+      {x:0, y:0, width:1, height:200},
+      {x:1000, y:0, width:1, height: 200}
+    ],
+    dangerZones: [
+      {x:200, y:190, width:660, height:10}
+    ],
+    safeZone: {x:960, y:0, width:40, height:200},
+    loadingBar: {x:0, y:0, width:0, height:200}
+  },
+
+  {
+    width: 1000,
+    height: 200,
+    playerX: 50,
+    playerY: 190,
+    walls: [
       {x:150, y:167, width:90, height:33},
       {x:240, y:133, width:40, height:67},
       {x:280, y:80, width:40, height:120},
@@ -75,7 +95,7 @@ var currentLevel = levels[levelNum];
 var response, file, secondsLabel;
 function startLevel(number, player) {
   $(window).unbind('keyup');
-  $('h1').html('Ready?');
+  $('#main-h1').html('Ready?');
   $('#overlay').css('display', 'none');
   $('.prompt').css('display', 'none');
   currentLevel = levels[number];
@@ -94,7 +114,7 @@ function startLevel(number, player) {
     $('#finish-timer').css('display', 'block');
     $('#download-wait').css('display', 'none');
     gameRunning = true;
-    $('h1').html('Downloading file...');
+    $('#main-h1').html('Downloading file...');
   }, 1000);
 }
 
@@ -103,6 +123,11 @@ function updateLevel(dt, player) {
   if (areColliding(currentLevel.safeZone, player)) player.safe = true;
   else player.safe = false;
   if (areColliding(currentLevel.loadingBar, player) && !player.safe) loseGame();
+  if (currentLevel.dangerZones) {
+    for (i=0; i<currentLevel.dangerZones.length; i++) {
+      if (areColliding(currentLevel.dangerZones[i], player)) loseGame();
+    }
+  }
   if (currentLevel.loadingBar.width < 1000) {
     currentLevel.loadingBar.width += dt/10;
   }
@@ -159,6 +184,13 @@ function renderLevel(ctx, player) {
 
   ctx.fillStyle = 'red';
   ctx.fillRect(player.x*viewportModifier, player.y*viewportModifier, player.width*viewportModifier, player.height*viewportModifier);
+
+  ctx.fillStyle = 'rgba(255,0,0,0.5)';
+  if (currentLevel.dangerZones) {
+    for(i=0; i<currentLevel.dangerZones.length; i++) {
+      ctx.fillRect(currentLevel.dangerZones[i].x*viewportModifier, currentLevel.dangerZones[i].y*viewportModifier, currentLevel.dangerZones[i].width*viewportModifier, currentLevel.dangerZones[i].height*viewportModifier);
+    }
+  }
 
   ctx.fillStyle = 'rgba(0,255,0,0.5)';
   ctx.fillRect(currentLevel.safeZone.x*viewportModifier, currentLevel.safeZone.y*viewportModifier, currentLevel.safeZone.width*viewportModifier, currentLevel.safeZone.height*viewportModifier);
@@ -254,13 +286,24 @@ function winGame() {
   setTimeout(function() {
     $('#overlay').css('display', 'block');
     $('#success').css('display', 'block');
-    $(window).on('keyup', function(e) {
-      if (!gameRunning && e.keyCode===32) {
-        currentLevelIndex += 1;
-        levelNum = currentLevelIndex;
-        startLevel(levelNum, player);
-      }
-    });
+    // $(window).on('keyup', function(e) {
+    //   if (!gameRunning && e.keyCode===32) {
+    //     currentLevelIndex++;
+    //     $('#success').css('display', 'none');
+    //     file = filenames[Math.floor(Math.random()*filenames.length)];
+    //     $('#start span').html(file);
+    //     $('#start').css('display', 'block');
+    //     $(window).unbind('keyup');
+    //     currentLevel = levels[currentLevelIndex];
+    //     player.x = 50;
+    //     player.y = 190;
+    //     $(window).on('keyup', function(e) {
+    //       if (!gameRunning && e.keyCode===32) {
+    //         startLevel(currentLevelIndex, player);
+    //       }
+    //     });
+    //   }
+    // });
   }, 500);
   gameRunning = false;
 }

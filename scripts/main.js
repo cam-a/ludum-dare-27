@@ -35,6 +35,7 @@ function setup() {
     $('#file-list').css('display', 'none');
     $('#start').css('display', 'block');
     currentLevel = levels[currentLevelIndex];
+    levels[currentLevelIndex].loadingBar.width = 0;
     $(window).on('keyup', function(e) {
     if (!gameRunning && e.keyCode===32)
       startLevel(currentLevelIndex, player);

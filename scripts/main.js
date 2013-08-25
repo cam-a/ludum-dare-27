@@ -18,8 +18,6 @@ function setup() {
   viewport.height = height;
 
   $('.button').click(function() {
-    $('#overlay').css('display', 'none');
-    $('#prompt').css('display', 'none');
     startLevel(0, player);
   });
 }

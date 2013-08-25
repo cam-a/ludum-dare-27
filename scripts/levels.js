@@ -29,6 +29,8 @@ var filenames = ['README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222
 var currentLevel = levels[0];
 var response, file;
 function startLevel(number, player) {
+  $('#overlay').css('display', 'none');
+  $('#prompt').css('display', 'none');
   currentLevel = levels[number];
   player.x = currentLevel.playerX;
   player.y = currentLevel.playerY;
@@ -38,6 +40,8 @@ function startLevel(number, player) {
 
 var elapsedSeconds, willCollide;
 function updateLevel(dt, player) {
+  if (areColliding(currentLevel.safeZone, player)) winGame();
+  if (areColliding(currentLevel.loadingBar, player)) loseGame();
   if (currentLevel.loadingBar.width < 1000) currentLevel.loadingBar.width += dt/10;
 
   elapsedSeconds = dt/1000;
@@ -154,4 +158,29 @@ function handleCollision(staticObj, dynamicObj) {
     return true;
   }
   return false;
+}
+
+function areColliding(staticObj, dynamicObj) {
+  minXOffset = staticObj.width/2 + dynamicObj.width/2;
+  minYOffset = staticObj.height/2 + dynamicObj.height/2;
+
+  xOffset = (staticObj.x+staticObj.width/2) - (dynamicObj.x+dynamicObj.width/2);
+  yOffset = (staticObj.y+staticObj.height/2) - (dynamicObj.y+dynamicObj.height/2);
+
+  xDiff = minXOffset-Math.abs(xOffset);
+  yDiff = minYOffset-Math.abs(yOffset);
+
+  if (xDiff >= 0 && yDiff >=0) {
+    return true;
+  }
+  return false;
+}
+
+function winGame() {
+  alert('you won the game');
+  gameRunning = false;
+}
+function loseGame() {
+  alert('you lost the game');
+  gameRunning = false;
 }

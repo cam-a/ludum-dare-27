@@ -4,11 +4,14 @@ var TWO_PI = 2*Math.PI;
 var friction = 0.8;
 var gravity = 1000;
 var gameRunning = false;
+var viewportModifier = 1;
 
 setup();
 start();
 
 function setup() {
+  file = filenames[Math.floor(Math.random()*filenames.length)];
+  $('#start span').html(file);
   viewport = document.getElementById('viewport');
   ctx = viewport.getContext('2d');
   win = $(window);
@@ -16,7 +19,7 @@ function setup() {
   height = 200; //win.height();
   viewport.width = width;
   viewport.height = height;
-
+  resize();
   $('.startgame').click(function() {
     startLevel(0, player);
   });
@@ -24,6 +27,7 @@ function setup() {
     if (!gameRunning && e.keyCode===32)
       startLevel(0, player);
   });
+  $(window).on('resize', resize);
 }
 function start() {
   then = Date.now();
@@ -52,4 +56,13 @@ function update(dt) {
 
 function draw() {
   renderLevel(ctx, player);
+}
+
+var viewportWidth, viewportHeight;
+function resize() {
+  viewportWidth = $(window).width()-25;
+  viewportModifier = viewportWidth/width;
+  viewportHeight = viewportModifier*height;
+  viewport.width = viewportWidth;
+  viewport.height = viewportHeight+5;
 }

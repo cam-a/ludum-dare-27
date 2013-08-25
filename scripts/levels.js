@@ -24,7 +24,7 @@ var levels = [
   }
 ];
 
-var filenames = ['README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
+var filenames = ['nsa_keylogger.exe', 'RAM_32GB.bat', 'README.bat', 'harmless.exe', 'notatrojan.exe', 'HTTPS://65.222.202.53/~TILDE/PUB/CIA-BIN/ETC/INIT.DLL?FILE=__AUTOEXEC.BAT.MY%20OSX%20DOCUMENTS-INSTALL.EXE.RAR.INI.TAR.DOÇX.PHPHPHP.XHTML.TML.XTL.TXXT.0DAY.HACK.ERS_(1995)_BLURAY_CAM-XVID.EXE.TAR.[SCR].LISP.MSI.LNK.ZDA.GNN.WRBT.OBJ.O.H.SWF.DPKG.APP.ZIP.TAR.TAR.CO.GZ.A.OUT.EXE'];
 
 var currentLevel = levels[0];
 var response, file, secondsLabel;
@@ -44,7 +44,6 @@ function startLevel(number, player) {
   $('#download-wait').css('display', 'block');
   $('#download-done').css('display', 'none');
   $('#finish-timer span').html(secondsLabel);
-  file = filenames[Math.floor(Math.random()*filenames.length)];
   setTimeout(function() {
     $('#finish-timer').css('display', 'block');
     $('#download-wait').css('display', 'none');
@@ -104,37 +103,37 @@ function updateLevel(dt, player) {
 }
 
 function renderLevel(ctx, player) {
-  ctx.clearRect(0, 0, width, height);
+  ctx.clearRect(0, 0, width*viewportModifier, height*viewportModifier);
   ctx.fillStyle = 'black';
 
   for(i=0; i<currentLevel.walls.length; i++) {
-    ctx.rect(currentLevel.walls[i].x, currentLevel.walls[i].y, currentLevel.walls[i].width, currentLevel.walls[i].height);
+    ctx.rect(currentLevel.walls[i].x*viewportModifier, currentLevel.walls[i].y*viewportModifier, currentLevel.walls[i].width*viewportModifier, currentLevel.walls[i].height*viewportModifier);
   }
   ctx.fill();
 
   ctx.fillStyle = 'red';
-  ctx.fillRect(player.x, player.y, player.width, player.height);
+  ctx.fillRect(player.x*viewportModifier, player.y*viewportModifier, player.width*viewportModifier, player.height*viewportModifier);
 
   ctx.fillStyle = 'rgba(0,255,0,0.5)';
-  ctx.fillRect(currentLevel.safeZone.x, currentLevel.safeZone.y, currentLevel.safeZone.width, currentLevel.safeZone.height);
+  ctx.fillRect(currentLevel.safeZone.x*viewportModifier, currentLevel.safeZone.y*viewportModifier, currentLevel.safeZone.width*viewportModifier, currentLevel.safeZone.height*viewportModifier);
 
   ctx.fillStyle = 'green';
-  ctx.fillRect(currentLevel.loadingBar.x, currentLevel.loadingBar.y, currentLevel.loadingBar.width, currentLevel.loadingBar.height);
+  ctx.fillRect(currentLevel.loadingBar.x*viewportModifier, currentLevel.loadingBar.y*viewportModifier, currentLevel.loadingBar.width*viewportModifier, currentLevel.loadingBar.height*viewportModifier);
 
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.lineTo(0, height);
+  ctx.lineTo(0, height*viewportModifier);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(0, height);
-  ctx.lineTo(width, height);
+  ctx.moveTo(0, height*viewportModifier);
+  ctx.lineTo(width*viewportModifier, height*viewportModifier);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(width, height);
-  ctx.lineTo(width, 0);
+  ctx.moveTo(width*viewportModifier, height*viewportModifier);
+  ctx.lineTo(width*viewportModifier, 0);
   ctx.stroke();
   ctx.beginPath();
-  ctx.moveTo(width, 0);
+  ctx.moveTo(width*viewportModifier, 0);
   ctx.lineTo(0, 0);
   ctx.stroke();
 }

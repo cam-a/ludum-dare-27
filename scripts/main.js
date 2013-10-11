@@ -7,7 +7,10 @@ var gameRunning = false;
 var viewportModifier = 1;
 var currentLevelIndex = 0;
 
-$(window).click(function() {
+FastClick.attach(document.body);
+
+$(window).on('click', function() {
+  window.scrollTo(0, 1);
   $(window).unbind('click');
   $('#intro').css('display', 'none');
   $('#main-h1').css('display', 'block');
@@ -18,6 +21,7 @@ $(window).click(function() {
 })
 
 function setup() {
+  window.scrollTo(0, 1);
   setupRAF();
   file = filenames[0];
   $('#start span').html(file);
@@ -29,7 +33,8 @@ function setup() {
   viewport.width = width;
   viewport.height = height;
   resize();
-  $('.file').click(function() {
+  $('.file').on('click', function() {
+    window.scrollTo(0, 1);
     player.x = 50;
     player.y = 190;
     currentLevelIndex = $(this).attr('index');
@@ -44,16 +49,18 @@ function setup() {
       startLevel(currentLevelIndex, player);
     });
   });
-  $('.startgame').click(function() {
+  $('.startgame').on('click', function() {
+    window.scrollTo(0, 1);
     startLevel(currentLevelIndex, player);
   });
-  $('.newgame').click(function() {
+  $('.newgame').on('click', function() {
     $('.prompt').css('display', 'none');
     $('#file-list').css('display', 'block');
   });
   $(window).on('resize', resize);
 }
 function start() {
+  window.scrollTo(0, 1);
   then = Date.now();
   requestAnimationFrame(frame);
 }

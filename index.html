@@ -7,6 +7,7 @@
       body {
         word-wrap: break-word;
         font-family: Helvetica;
+        font-size: 10pt;
       }
       #overlay {
         position: absolute;
@@ -18,9 +19,11 @@
       }
       .prompt {
         position: absolute;
-        left: 25%;
-        right: 25%;
-        top: 20px;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        overflow-y:scroll;
         background-color: white;
         border: 1px solid black;
         text-align: center;
@@ -81,6 +84,34 @@
       #file-list {
         display: none;
       }
+
+      #mobile-left {
+        background-color:blue;
+        position:absolute;
+        bottom:150px;
+        right:125px;
+        width:100px;
+        height:100px;
+      }
+      #mobile-right {
+        background-color:blue;
+        position:absolute;
+        bottom:150px;
+        right:0;
+        width:100px;
+        height:100px;
+      }
+      #mobile-up {
+        background-color:blue;
+        position:absolute;
+        bottom:150px;
+        left:0;
+        width:100px;
+        height:100px;
+      }
+      .mobile-active {
+        background-color:red !important;
+      }
     </style>
   </head>
 
@@ -92,6 +123,9 @@
     <h3 id='finish-timer'>Your download will be done in <span>10</span> seconds.</h3>
     <h3 id='download-done'>Your download is complete!</h3>
     <h3 id='download-wait'>Waiting for download to begin...</h3>
+    <div id='mobile-left'></div>
+    <div id='mobile-right'></div>
+    <div id='mobile-up'></div>
     <div id='overlay'></div>
     <div class='prompt' id='start'>
       <p>Are you sure you want to download the file '<span>harmless.exe</span>' ?</p><p>Click "Yes" or press the spacebar to start.</p>
@@ -132,6 +166,7 @@
     </div>
     <script>document.onkeydown = function(e) {e.preventDefault()}</script>
     <script src='scripts/jquery.min.js'></script>
+    <script src='scripts/fastclick.min.js'></script>
     <script src='scripts/levels.js'></script>
     <script src='scripts/player.js'></script>
     <script src='scripts/main.js'></script>

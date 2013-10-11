@@ -78,3 +78,52 @@ addEventListener("keydown", function (e) {
 addEventListener("keyup", function (e) {
   delete keysDown[e.keyCode];
 }, false);
+
+$('#mobile-left').on('touchstart', function() {
+  keysDown[37] = true;
+  $('#mobile-left').addClass('mobile-active');
+});
+$('#mobile-right').on('touchstart', function() {
+  keysDown[39] = true;
+  $('#mobile-right').addClass('mobile-active');
+});
+$('#mobile-up').on('touchstart', function() {
+  keysDown[38] = true;
+  $('#mobile-up').addClass('mobile-active');
+});
+$('#mobile-left').on('touchend', function() {
+  delete keysDown[37];
+  $('#mobile-left').removeClass('mobile-active');
+});
+$('#mobile-right').on('touchend', function() {
+  delete keysDown[39];
+  $('#mobile-right').removeClass('mobile-active');
+});
+$('#mobile-up').on('touchend', function() {
+  delete keysDown[38];
+  $('#mobile-up').removeClass('mobile-active');
+});
+$('#mobile-left').on('touchcancel', function() {
+  delete keysDown[37];
+  $('#mobile-left').removeClass('mobile-active');
+});
+$('#mobile-right').on('touchcancel', function() {
+  delete keysDown[39];
+  $('#mobile-right').removeClass('mobile-active');
+});
+$('#mobile-up').on('touchcancel', function() {
+  delete keysDown[38];
+  $('#mobile-up').removeClass('mobile-active');
+});
+$('#mobile-left').on('touchleave', function() {
+  delete keysDown[37];
+  $('#mobile-left').removeClass('mobile-active');
+});
+$('#mobile-right').on('touchleave', function() {
+  delete keysDown[39];
+  $('#mobile-right').removeClass('mobile-active');
+});
+$('#mobile-up').on('touchleave', function() {
+  delete keysDown[38];
+  $('#mobile-up').removeClass('mobile-active');
+});

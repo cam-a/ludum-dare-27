@@ -2,6 +2,7 @@
 
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Ludum Dare 27</title>
     <style type='text/css'>
       body {
@@ -88,26 +89,26 @@
       #mobile-left {
         background-color:blue;
         position:absolute;
-        bottom:150px;
-        right:125px;
-        width:100px;
-        height:100px;
+        bottom:0;
+        right:30%;
+        width:25%;
+        height:30%;
       }
       #mobile-right {
         background-color:blue;
         position:absolute;
-        bottom:150px;
+        bottom:0;
         right:0;
-        width:100px;
-        height:100px;
+        width:25%;
+        height:30%;
       }
       #mobile-up {
         background-color:blue;
         position:absolute;
-        bottom:150px;
+        bottom:0;
         left:0;
-        width:100px;
-        height:100px;
+        width:25%;
+        height:30%;
       }
       .mobile-active {
         background-color:red !important;
@@ -116,7 +117,6 @@
   </head>
 
   <body>
-    <h1 id='main-h1'>File Download</h1>
     <div id='wrapper'>
       <canvas id='viewport' width='800' height='600'></canvas>
     </div>

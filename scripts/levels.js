@@ -121,7 +121,6 @@ var currentLevel = levels[levelNum];
 var response, file, secondsLabel;
 function startLevel(number, player) {
   $(window).unbind('keyup');
-  $('#main-h1').html('Ready?');
   $('#overlay').css('display', 'none');
   $('.prompt').css('display', 'none');
   currentLevel = levels[number];
@@ -141,7 +140,6 @@ function startLevel(number, player) {
     $('#finish-timer').css('display', 'block');
     $('#download-wait').css('display', 'none');
     gameRunning = true;
-    $('#main-h1').html('Downloading file...');
   }, 1000);
 }
 
@@ -224,12 +222,12 @@ function renderLevel(ctx, player) {
 
   var grd = ctx.createLinearGradient(0, 0, currentLevel.loadingBar.width*viewportModifier, currentLevel.loadingBar.height*viewportModifier);
   // light blue
-  grd.addColorStop(0, 'lightgreen');   
+  grd.addColorStop(0, 'lightgreen');
   // dark blue
   grd.addColorStop(1, 'darkgreen');
   ctx.fillStyle = grd;
   ctx.fillRect(currentLevel.loadingBar.x*viewportModifier, currentLevel.loadingBar.y*viewportModifier, currentLevel.loadingBar.width*viewportModifier, currentLevel.loadingBar.height*viewportModifier);
-  
+
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(0, height*viewportModifier);
